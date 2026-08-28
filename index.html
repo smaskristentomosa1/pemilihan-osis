@@ -328,6 +328,46 @@ input[type=checkbox]{width:17px;height:17px;accent-color:var(--primary);cursor:p
 .report-sign .sig-s{font-size:12px;color:var(--muted)}
 .report-note{font-size:12px;color:var(--muted);margin-top:14px}
 
+
+/* ---------- Kartu Pemilih ---------- */
+.kartu-screen-toolbar{display:block}
+.kartu-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.kartu-toolbar .left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.kartu-toolbar .right{display:flex;gap:9px;flex-wrap:wrap}
+.kartu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.kartu-item{position:relative}
+.kartu-pilih{position:absolute;top:10px;right:10px;z-index:2;width:18px!important;height:18px!important}
+.kartu-card{background:#fff;border:1.5px solid #d9def0;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);min-height:205px}
+.kartu-head{background:var(--grad);color:#fff;padding:12px 15px;display:flex;align-items:center;gap:10px}
+.kartu-head .logo{width:38px;height:38px;border-radius:9px;object-fit:cover;background:rgba(255,255,255,.18)}
+.kartu-head .logo-ph{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center}
+.kartu-head .logo-ph .ic{width:21px;height:21px}
+.kartu-school{font-size:12px;font-weight:800;line-height:1.25}
+.kartu-title{font-size:10px;opacity:.86;font-weight:600;margin-top:2px}
+.kartu-body{padding:14px 15px 15px}
+.kartu-label{font-size:9.5px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.7px}
+.kartu-name{font-size:17px;font-weight:800;margin:3px 0 10px}
+.kartu-meta{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.kartu-meta-box{background:#f7f8fd;border-radius:10px;padding:8px 10px}
+.kartu-meta-box b{display:block;font-size:12px}
+.kartu-token{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px dashed #c7d0f8;background:#f1f3ff;border-radius:11px;padding:9px 11px}
+.kartu-token span{font-size:9.5px;color:var(--muted);font-weight:800}
+.kartu-token strong{font-family:var(--mono);font-size:17px;letter-spacing:3px;color:var(--primary)}
+.kartu-foot{font-size:9px;color:var(--muted);margin-top:8px;text-align:center;font-weight:600}
+@media print{
+  body.print-kartu #content{padding:0!important}
+  body.print-kartu .kartu-screen-toolbar,
+  body.print-kartu .kartu-filter,
+  body.print-kartu .kartu-pilih,
+  body.print-kartu .app-footer{display:none!important}
+  body.print-kartu .kartu-print-hide{display:none!important}
+  body.print-kartu .kartu-grid{grid-template-columns:1fr 1fr;gap:10mm}
+  body.print-kartu .kartu-item{break-inside:avoid;page-break-inside:avoid}
+  body.print-kartu .kartu-card{box-shadow:none;border:1px solid #333;border-radius:8px}
+  body.print-kartu .kartu-head{background:#eee!important;color:#000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.print-kartu .kartu-token{background:#f5f5f5!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
 /* ---------- Modals ---------- */
 .modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;animation:fade .18s ease}
 @keyframes fade{from{opacity:0}to{opacity:1}}
@@ -460,7 +500,7 @@ body.nav-open .mobile-backdrop{opacity:1;pointer-events:auto}
         <button class="btn btn-primary btn-block" type="submit">Vote Sekarang</button>
       </form>
     </div>
-    <p class="login-footer">Dibuat oleh Khamarlius Waruwu | Versi 1.0</p>
+    <p class="login-footer">Dibuat oleh Harum Wibowo | Versi 1.0</p>
   </div>
 </div>
 
@@ -508,7 +548,7 @@ body.nav-open .mobile-backdrop{opacity:1;pointer-events:auto}
       </div>
     </header>
     <main id="content"></main>
-    <footer class="app-footer">Dibuat oleh Khamarlius Waruwu | Versi 1.0</footer>
+    <footer class="app-footer">Dibuat oleh Harum Wibowo | Versi 1.0</footer>
   </div>
 </div>
 
@@ -795,6 +835,7 @@ const ROLE_ALLOWED = {
   '#/pemilihan': ['Pemilih'],
   '#/monitor': ['Panitia'],
   '#/hasil': ['Panitia'],
+  '#/cetak-kartu-pemilih': ['Admin'],
   '#/pengaturan': ['Admin']
 };
 const PAGE_TITLES = {
@@ -806,6 +847,7 @@ const PAGE_TITLES = {
   '#/pemilihan': 'Pemilihan',
   '#/monitor': 'Monitor',
   '#/hasil': 'Hasil',
+  '#/cetak-kartu-pemilih': 'Cetak Kartu Pemilih',
   '#/pengaturan': 'Pengaturan'
 };
 const SUB_NAV = [
@@ -823,6 +865,7 @@ const PAGES = {
   '#/pemilihan': pagePemilihan,
   '#/monitor': pageMonitor,
   '#/hasil': pageHasil,
+  '#/cetak-kartu-pemilih': pageCetakKartuPemilih,
   '#/pengaturan': pagePengaturan
 };
 
@@ -857,7 +900,10 @@ function navItems(role){
     items.push({ href:'#/monitor', label:'Monitor', icon:'activity' });
     items.push({ href:'#/hasil', label:'Hasil', icon:'file-text' });
   }
-  if(role === 'Admin') items.push({ href:'#/pengaturan', label:'Pengaturan', icon:'settings' });
+  if(role === 'Admin'){
+    items.push({ href:'#/cetak-kartu-pemilih', label:'Cetak Kartu Pemilih', icon:'printer' });
+    items.push({ href:'#/pengaturan', label:'Pengaturan', icon:'settings' });
+  }
   return items;
 }
 
@@ -1739,6 +1785,129 @@ async function pageHasil(){
       </div>`;
     el('btn-print').addEventListener('click', () => window.print());
   }catch(e){ el('content').innerHTML = ''; toast(e.message, 'error'); }
+}
+
+/* ---------- Cetak Kartu Pemilih ---------- */
+async function pageCetakKartuPemilih(){
+  document.body.classList.remove('print-kartu');
+  el('content').innerHTML = '<div class="page-loading"><div class="spinner"></div> Memuat data pemilih...</div>';
+  try{
+    const [pemilih, kelas, info] = await Promise.all([
+      api('getPemilih'),
+      api('getKelas'),
+      api('getPublicInfo', {}, null, true)
+    ]);
+    S.pemilih = pemilih || [];
+    S.kelas = kelas || [];
+    const kmap = {};
+    S.kelas.forEach(k => kmap[String(k.ID)] = k['Nama Kelas']);
+
+    el('content').innerHTML = `
+      <div class="kartu-screen-toolbar">
+        <div class="kartu-toolbar">
+          <div class="left">
+            <div>
+              <h3 class="card-title" style="margin-bottom:2px">${icon('printer')} Kartu Pemilih</h3>
+              <div class="muted-sm">Cetak kartu pemilih berisi nama, kelas, dan token.</div>
+            </div>
+          </div>
+          <div class="right">
+            <button class="btn btn-ghost btn-sm" id="btn-kartu-check-all">${icon('check')} Pilih Semua</button>
+            <button class="btn btn-primary btn-sm" id="btn-print-kartu">${icon('printer')} Cetak Kartu Terpilih</button>
+          </div>
+        </div>
+      </div>
+      <div class="card kartu-filter" style="margin-bottom:18px">
+        <div class="table-toolbar" style="margin-bottom:0">
+          <div class="table-search" style="max-width:none">
+            ${icon('search')}
+            <input id="kartu-search" placeholder="Cari nama / token...">
+          </div>
+          <select id="kartu-kelas" style="width:auto;min-width:190px">
+            <option value="">Semua Kelas</option>
+            ${S.kelas.map(k => `<option value="${esc(k.ID)}">${esc(k['Nama Kelas'])}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div id="kartu-grid" class="kartu-grid"></div>`;
+
+    const logo = info && info.logo ? fotoUrl(info.logo) : '';
+    const school = info && info.namaSekolah ? info.namaSekolah : (S.schoolName || 'Sekolah');
+
+    const renderCards = () => {
+      const q = (el('kartu-search').value || '').toLowerCase().trim();
+      const kelasId = el('kartu-kelas').value || '';
+      const rows = S.pemilih.filter(r => {
+        const name = String(r['Nama Pemilih'] || '').toLowerCase();
+        const token = String(r.Token || '').toLowerCase();
+        const okQ = !q || name.includes(q) || token.includes(q);
+        const okK = !kelasId || String(r.Kelas) === String(kelasId);
+        return okQ && okK;
+      });
+      const grid = el('kartu-grid');
+      if(!rows.length){
+        grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">Tidak ada data pemilih yang sesuai.</div>';
+        return;
+      }
+      grid.innerHTML = rows.map(r => `
+        <div class="kartu-item" data-id="${esc(r.ID)}">
+          <input class="kartu-pilih" type="checkbox" checked data-id="${esc(r.ID)}" title="Pilih kartu">
+          <div class="kartu-card">
+            <div class="kartu-head">
+              ${logo ? `<img class="logo" src="${esc(logo)}" alt="logo">` : `<div class="logo-ph">${icon('shield')}</div>`}
+              <div>
+                <div class="kartu-school">${esc(school)}</div>
+                <div class="kartu-title">KARTU PEMILIH OSIS</div>
+              </div>
+            </div>
+            <div class="kartu-body">
+              <div class="kartu-label">Nama Pemilih</div>
+              <div class="kartu-name">${esc(r['Nama Pemilih'])}</div>
+              <div class="kartu-meta">
+                <div class="kartu-meta-box"><div class="kartu-label">Kelas</div><b>${esc(kmap[String(r.Kelas)] || '—')}</b></div>
+                <div class="kartu-meta-box"><div class="kartu-label">Jenis Kelamin</div><b>${esc(r['Jenis Kelamin'] || '—')}</b></div>
+              </div>
+              <div class="kartu-token"><span>TOKEN VOTING</span><strong>${esc(r.Token)}</strong></div>
+              <div class="kartu-foot">Simpan kartu ini dan jangan berikan token kepada orang lain.</div>
+            </div>
+          </div>
+        </div>`).join('');
+    };
+
+    const printSelected = () => {
+      const selected = new Set($$('#kartu-grid .kartu-pilih:checked').map(c => String(c.dataset.id)));
+      if(!selected.size){ toast('Pilih minimal satu kartu untuk dicetak.', 'error'); return; }
+      $$('#kartu-grid .kartu-item').forEach(item => {
+        item.classList.toggle('kartu-print-hide', !selected.has(String(item.dataset.id)));
+      });
+      document.body.classList.add('print-kartu');
+      window.print();
+      setTimeout(() => {
+        document.body.classList.remove('print-kartu');
+        $$('#kartu-grid .kartu-item').forEach(item => item.classList.remove('kartu-print-hide'));
+      }, 500);
+    };
+
+    el('kartu-search').addEventListener('input', renderCards);
+    el('kartu-kelas').addEventListener('change', renderCards);
+    el('btn-print-kartu').addEventListener('click', printSelected);
+    el('btn-kartu-check-all').addEventListener('click', () => {
+      const boxes = $$('#kartu-grid .kartu-pilih');
+      const allChecked = boxes.length && boxes.every(c => c.checked);
+      boxes.forEach(c => c.checked = !allChecked);
+      el('btn-kartu-check-all').innerHTML = `${icon('check')} ${allChecked ? 'Pilih Semua' : 'Batal Pilih Semua'}`;
+    });
+    window.addEventListener('afterprint', () => {
+      document.body.classList.remove('print-kartu');
+      $$('#kartu-grid .kartu-item').forEach(item => item.classList.remove('kartu-print-hide'));
+    }, { once:true });
+
+    renderCards();
+  }catch(e){
+    document.body.classList.remove('print-kartu');
+    el('content').innerHTML = '';
+    toast(e.message, 'error');
+  }
 }
 
 /* ---------- Pengaturan ---------- */
